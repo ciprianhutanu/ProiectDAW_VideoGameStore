@@ -12,6 +12,8 @@ namespace ProiectDAW_VideoGameStore.Models
         public string Password { get; set; }
         public Role Role { get; set; }
 
+        public Guid ActiveOrderId { get; set; }
+
         public ICollection<Order> Orders { get; set; }
         public ICollection<Review> Reviews { get; set; }
     }
