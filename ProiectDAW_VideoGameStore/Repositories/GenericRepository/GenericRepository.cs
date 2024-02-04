@@ -9,6 +9,12 @@ namespace ProiectDAW_VideoGameStore.Repositories.GenericRepository
         protected readonly DataBaseContext _dbContext;
         protected readonly DbSet<TEntity> _table;
 
+        public GenericRepository(DataBaseContext context)
+        {
+            _dbContext = context;
+            _table = context.Set<TEntity>();
+        }
+
         public async Task<List<TEntity>> GetAllAsync()
         {
             return await _table.AsNoTracking().ToListAsync();

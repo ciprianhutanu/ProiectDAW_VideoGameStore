@@ -1,11 +1,18 @@
+using ProiectDAW_VideoGameStore.Data;
+using ProiectDAW_VideoGameStore.Helpers;
+using Microsoft.EntityFrameworkCore;
+using ProiectDAW_VideoGameStore.Helpers.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+builder.Services.AddHelpers();
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 var app = builder.Build();
 

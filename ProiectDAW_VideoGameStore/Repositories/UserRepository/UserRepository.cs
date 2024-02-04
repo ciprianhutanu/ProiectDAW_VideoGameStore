@@ -8,7 +8,7 @@ namespace ProiectDAW_VideoGameStore.Repositories.UserRepository
 {
     public class UserRepository: GenericRepository<User>, IUserRepository
     {
-        public UserRepository(DataBaseContext context) { }
+        public UserRepository(DataBaseContext context): base(context) { }
 
         public async Task<List<User>> FindAll()
         {

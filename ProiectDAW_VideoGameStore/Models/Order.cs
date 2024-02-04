@@ -8,7 +8,7 @@ namespace ProiectDAW_VideoGameStore.Models
         public PayTypeEnum PayType { get; set; }
         public OrderStatus Status { get; set; } 
 
-        public User User { get; set; }
+        public User? User { get; set; }
         public Guid UserId { get; set; }
 
         public ICollection<PlacedOn> ItemsPlacedOn { get; set; }

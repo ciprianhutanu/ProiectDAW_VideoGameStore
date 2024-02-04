@@ -7,11 +7,11 @@ using System.Text;
 
 namespace ProiectDAW_VideoGameStore.Helpers.JwtUtils
 {
-    public class JwtUtils:IJwtUtils
+    public class JwtUtil:IJwtUtils
     {
         private readonly AppSettings _appSettings;
 
-        public JwtUtils(IOptions<AppSettings> appSettings)
+        public JwtUtil(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
         }
