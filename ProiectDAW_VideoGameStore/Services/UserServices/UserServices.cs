@@ -18,6 +18,12 @@ namespace ProiectDAW_VideoGameStore.Services.UserServices
             _userRepo = userRepository;
             _jwtUtils = jwtUtils;
         }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _userRepo.GetAllAsync();
+        }
+
         public async Task<User> GetById(Guid id)
         {
             return await _userRepo.FindByIdAsync(id);

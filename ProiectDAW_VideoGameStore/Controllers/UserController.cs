@@ -55,6 +55,12 @@ namespace ProiectDAW_VideoGameStore.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpGet("get-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            return Ok(_userServices.GetAllUsers());
+        }
 
         [Authorize]
         [HttpGet("check-auth-without-role")]

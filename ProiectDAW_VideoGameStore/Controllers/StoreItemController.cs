@@ -18,6 +18,18 @@ namespace ProiectDAW_VideoGameStore.Controllers
             _storeItemServices = storeItemServices;
         }
 
+        [AllowAnonymous]
+        [HttpGet("get-items")]
+        public IActionResult GetItemsWithReview() 
+        {
+            var response = _storeItemServices.GetItemsWithAverageReviewScores();
+            if (response == null)
+            {
+                return BadRequest();
+            }
+            return Ok(response);
+        }
+
         [Authorize(Roles = "Employee")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateItem([FromBody] StoreItemDTO storeItemDTO)

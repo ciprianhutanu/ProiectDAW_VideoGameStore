@@ -9,5 +9,6 @@ namespace ProiectDAW_VideoGameStore.Services.UserServices
         Task<UserLoginResponse> Login(UserLoginDTO userDTO);
         Task<User> GetById(Guid id);
         Task<bool> Register(UserRegistrationDTO newUser, Role userRole);
+        Task<List<User>> GetAllUsers();
     }
 }
