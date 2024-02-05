@@ -2,6 +2,7 @@
 using ProiectDAW_VideoGameStore.Models.DTOs;
 using ProiectDAW_VideoGameStore.Models.Enums;
 using ProiectDAW_VideoGameStore.Repositories.OrderRepository;
+using ProiectDAW_VideoGameStore.Repositories.PlacedOnRepository;
 using ProiectDAW_VideoGameStore.Repositories.UserRepository;
 
 namespace ProiectDAW_VideoGameStore.Services.OrderServices
@@ -10,11 +11,13 @@ namespace ProiectDAW_VideoGameStore.Services.OrderServices
     {
         public readonly IUserRepository _userRepo;
         public readonly IOrderRepository _orderRepo;
+        public readonly IPlacedOnRepository _placedOnRepo;
         
-        public OrderServices(IUserRepository userRepository, IOrderRepository orderRepository)
+        public OrderServices(IUserRepository userRepository, IOrderRepository orderRepository, IPlacedOnRepository placedOnRepo)
         {
             _userRepo = userRepository;
             _orderRepo = orderRepository;
+            _placedOnRepo = placedOnRepo;
         }
 
         public async void ChangePaymentMethod(Guid orderId, PayTypeEnum paytype)
@@ -80,6 +83,37 @@ namespace ProiectDAW_VideoGameStore.Services.OrderServices
                 _userRepo.Update(user);
                 await _userRepo.SaveAsync();
             }
+        }
+        public async Task<int> GetTotalCost(Guid orderId)
+        {
+            var order = await _orderRepo.GetByIdAsync(orderId);
+            if (order != null)
+            {
+                var OrderProducts = _placedOnRepo.GetItemsFromOrder(orderId);
+                return OrderProducts.Sum(op => op.FinalPrice);
+            }
+            return 0;
+        }
+
+        public async Task<OrderWithTotalDTO> GetOrderWithTotal(Guid orderId)
+        {
+            var order = await _orderRepo.GetByIdAsync(orderId);
+            if(order != null)
+            {
+                return new OrderWithTotalDTO
+                {
+                    PayType = order.PayType,
+                    UserId = order.UserId,
+                    Status = order.Status,
+                    Total = await GetTotalCost(orderId)
+                };
+            }
+            return null;
+        }
+
+        public async Task<List<OrderItems>> GetProductsForOrder(Guid orderId)
+        {
+            return _placedOnRepo.GetItemsFromOrder(orderId);
         }
     }
 }
