@@ -42,7 +42,7 @@ namespace ProiectDAW_VideoGameStore.Services.OrderServices
             }
         }
 
-        public async void CreateActiveOrder(Guid userId)
+        public async Task<bool> CreateActiveOrder(Guid userId)
         {
             var user = await _userRepo.FindByIdAsync(userId);
             if (user != null) {
@@ -59,7 +59,10 @@ namespace ProiectDAW_VideoGameStore.Services.OrderServices
 
                 await _orderRepo.SaveAsync();
                 await _userRepo.SaveAsync();
+
+                return true;
             }
+            return false;
         }
 
         public async Task<List<Order>> GetOrdersByUserID(Guid userId)
@@ -114,6 +117,42 @@ namespace ProiectDAW_VideoGameStore.Services.OrderServices
         public async Task<List<OrderItems>> GetProductsForOrder(Guid orderId)
         {
             return _placedOnRepo.GetItemsFromOrder(orderId);
+        }
+
+        public async Task<bool> DropActiveOrder(Guid userId)
+        {
+            var user = await _userRepo.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var orderId = user.ActiveOrderId;
+                if (orderId != default)
+                {
+                    _orderRepo.DeleteById(orderId);
+                    await _orderRepo.SaveAsync();
+                }
+                else
+                    return false;
+            }
+            else return false;
+            return true;
+        }
+
+        public async Task<bool> AddItemToOrder(Guid userId, Guid itemId, int quantity)
+        {
+            var user = await _userRepo.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var NewPlacedOn = new PlacedOn
+                {
+                    OrderId = user.ActiveOrderId,
+                    StoreItemId = itemId,
+                    ItemQuantity = quantity
+                };
+                await _placedOnRepo.CreateAsync(NewPlacedOn);
+                await _placedOnRepo.SaveAsync();
+            }
+            else { return false; }
+            return true;
         }
     }
 }

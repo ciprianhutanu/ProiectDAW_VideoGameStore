@@ -13,6 +13,7 @@ builder.Services.AddRepositories();
 builder.Services.AddServices();
 builder.Services.AddHelpers();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -28,5 +29,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.Run();
